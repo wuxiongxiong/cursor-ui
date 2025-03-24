@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitJourney - 健身旅程</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      /* 色彩系统 */
+      --blue-primary: #2E74FF;
+      --blue-light: #EBF2FF;
+      --blue-dark: #1E5AC8;
+      --green: #34D399;
+      --green-light: #ECFDF5;
+      --orange: #F97316;
+      --orange-light: #FFF4ED;
+      --purple: #9061F9;
+      --purple-light: #F4EDFD;
+      
+      /* 中性色 */
+      --gray-50: #F9FAFB;
+      --gray-100: #F3F4F6;
+      --gray-200: #E5E7EB;
+      --gray-300: #D1D5DB;
+      --gray-400: #9CA3AF;
+      --gray-500: #6B7280;
+      --gray-600: #4B5563;
+      --gray-700: #374151;
+      --gray-800: #1F2937;
+      --gray-900: #111827;
+      
+      /* 功能色 */
+      --success: var(--green);
+      --warning: var(--orange);
+      --info: var(--blue-primary);
+      
+      /* 间距 */
+      --space-xxs: 4px;
+      --space-xs: 8px;
+      --space-sm: 12px;
+      --space-md: 16px;
+      --space-lg: 24px;
+      --space-xl: 32px;
+      --space-xxl: 48px;
+      
+      /* 圆角 */
+      --radius-sm: 6px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-full: 9999px;
+      
+      /* 阴影 */
+      --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.08);
+      --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--gray-50);
+      color: var(--gray-800);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    
+    .app-container {
+      max-width: 480px;
+      min-height: 100vh;
+      margin: 0 auto;
+      background-color: white;
+      box-shadow: var(--shadow-md);
+      position: relative;
+    }
+    
+    /* 导航栏 */
+    .nav-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      max-width: 480px;
+      margin: 0 auto;
+      background-color: white;
+      display: flex;
+      justify-content: space-between;
+      padding: var(--space-sm) var(--space-md);
+      border-top: 1px solid var(--gray-200);
+      box-shadow: var(--shadow-sm);
+      z-index: 10;
+    }
+    
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: var(--gray-500);
+      font-size: 12px;
+      font-weight: 500;
+      padding: var(--space-xs) 0;
+    }
+    
+    .nav-item.active {
+      color: var(--blue-primary);
+    }
+    
+    .material-icons-round {
+      font-size: 24px;
+      margin-bottom: var(--space-xxs);
+    }
+    
+    /* 头部 */
+    .header {
+      padding: var(--space-lg) var(--space-lg) var(--space-md);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      background-color: white;
+    }
+    
+    .header-title {
+      font-size: 24px;
+      font-weight: 700;
+    }
+    
+    .header-subtitle {
+      font-size: 14px;
+      color: var(--gray-500);
+      margin-top: var(--space-xxs);
+    }
+    
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-full);
+      background-color: var(--blue-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--blue-primary);
+      font-weight: 600;
+      font-size: 16px;
+    }
+    
+    /* 内容区 */
+    .content {
+      padding: 0 var(--space-lg) var(--space-xxl);
+      padding-bottom: 80px; /* 为底部导航留出空间 */
+    }
+    
+    /* 卡片 */
+    .card {
+      background-color: white;
+      border-radius: var(--radius-md);
+      padding: var(--space-lg);
+      margin-bottom: var(--space-lg);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid var(--gray-100);
+    }
+    
+    .stats-card {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: var(--space-lg);
+    }
+    
+    .stat-item {
+      text-align: center;
+      flex: 1;
+    }
+    
+    .stat-value {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--blue-primary);
+    }
+    
+    .stat-label {
+      font-size: 12px;
+      color: var(--gray-500);
+      margin-top: var(--space-xxs);
+    }
+    
+    /* 运动目标 */
+    .goal-card {
+      background-color: var(--blue-light);
+      border: none;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .goal-progress {
+      margin: var(--space-md) 0;
+    }
+    
+    .progress-bar {
+      height: 8px;
+      background-color: rgba(255, 255, 255, 0.5);
+      border-radius: var(--radius-full);
+      margin-top: var(--space-xs);
+      overflow: hidden;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background-color: var(--blue-primary);
+      border-radius: var(--radius-full);
+      width: 65%;
+    }
+    
+    .goal-details {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      color: var(--gray-600);
+    }
+    
+    /* 课程卡片 */
+    .workout-card {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      color: inherit;
+      padding: var(--space-md);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--space-md);
+      border: 1px solid var(--gray-100);
+      transition: all 0.2s ease;
+    }
+    
+    .workout-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+    
+    .workout-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: var(--space-md);
+      flex-shrink: 0;
+    }
+    
+    .workout-icon.strength {
+      background-color: var(--blue-light);
+      color: var(--blue-primary);
+    }
+    
+    .workout-icon.cardio {
+      background-color: var(--orange-light);
+      color: var(--orange);
+    }
+    
+    .workout-icon.flexibility {
+      background-color: var(--purple-light);
+      color: var(--purple);
+    }
+    
+    .workout-icon .material-icons-round {
+      margin: 0;
+    }
+    
+    .workout-info {
+      flex: 1;
+    }
+    
+    .workout-title {
+      font-weight: 600;
+      margin-bottom: var(--space-xxs);
+    }
+    
+    .workout-meta {
+      font-size: 13px;
+      color: var(--gray-500);
+      display: flex;
+      align-items: center;
+    }
+    
+    .meta-divider {
+      display: inline-block;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background-color: var(--gray-300);
+      margin: 0 var(--space-xs);
+    }
+    
+    .badge {
+      display: inline-block;
+      padding: var(--space-xxs) var(--space-xs);
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 500;
+    }
+    
+    .badge.beginner {
+      background-color: var(--green-light);
+      color: var(--green);
+    }
+    
+    .badge.intermediate {
+      background-color: var(--orange-light);
+      color: var(--orange);
+    }
+    
+    .badge.advanced {
+      background-color: var(--purple-light);
+      color: var(--purple);
+    }
+    
+    /* 区块标题 */
+    .section-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: var(--space-md);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .view-all {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--blue-primary);
+      text-decoration: none;
+    }
+    
+    /* 按钮 */
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-sm) var(--space-lg);
+      font-size: 16px;
+      font-weight: 600;
+      border-radius: var(--radius-md);
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+    
+    .button.primary {
+      background-color: var(--blue-primary);
+      color: white;
+    }
+    
+    .button.primary:hover {
+      background-color: var(--blue-dark);
+    }
+    
+    .button.outline {
+      background-color: transparent;
+      border: 2px solid var(--blue-primary);
+      color: var(--blue-primary);
+    }
+    
+    .button.outline:hover {
+      background-color: var(--blue-light);
+    }
+    
+    /* 浮动按钮 */
+    .fab {
+      position: fixed;
+      bottom: 80px;
+      right: calc(50% - 220px);
+      width: 56px;
+      height: 56px;
+      border-radius: var(--radius-full);
+      background-color: var(--blue-primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-lg);
+      z-index: 5;
+      text-decoration: none;
+    }
+    
+    /* 详情页样式 */
+    .detail-header {
+      padding: var(--space-md) var(--space-lg);
+      display: flex;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      background-color: white;
+      z-index: 5;
+    }
+    
+    .back-button {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-full);
+      background-color: var(--gray-100);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gray-600);
+      margin-right: var(--space-md);
+      text-decoration: none;
+    }
+    
+    .workout-hero {
+      position: relative;
+      margin-bottom: var(--space-lg);
+    }
+    
+    .workout-image {
+      width: 100%;
+      height: 200px;
+      background-color: var(--blue-light);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    
+    .workout-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    .workout-label {
+      position: absolute;
+      top: var(--space-md);
+      left: var(--space-md);
+      display: inline-block;
+      padding: var(--space-xs) var(--space-sm);
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      font-weight: 600;
+      background-color: var(--blue-primary);
+      color: white;
+    }
+    
+    .detail-title {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: var(--space-xs);
+    }
+    
+    .detail-subtitle {
+      font-size: 16px;
+      color: var(--gray-500);
+      margin-bottom: var(--space-lg);
+    }
+    
+    .workout-info-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-md);
+      margin-bottom: var(--space-xl);
+    }
+    
+    .info-card {
+      background-color: var(--gray-50);
+      padding: var(--space-md);
+      border-radius: var(--radius-md);
+      text-align: center;
+    }
+    
+    .info-value {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: var(--space-xxs);
+    }
+    
+    .info-label {
+      font-size: 13px;
+      color: var(--gray-500);
+    }
+    
+    .section-subtitle {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: var(--space-sm);
+    }
+    
+    .detail-description {
+      font-size: 15px;
+      color: var(--gray-600);
+      line-height: 1.6;
+      margin-bottom: var(--space-lg);
+    }
+    
+    .exercise-list {
+      margin-bottom: var(--space-xl);
+    }
+    
+    .exercise-item {
+      display: flex;
+      align-items: center;
+      padding: var(--space-md) 0;
+      border-bottom: 1px solid var(--gray-200);
+    }
+    
+    .exercise-item:last-child {
+      border-bottom: none;
+    }
+    
+    .exercise-number {
+      width: 24px;
+      height: 24px;
+      border-radius: var(--radius-full);
+      background-color: var(--blue-light);
+      color: var(--blue-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+      margin-right: var(--space-md);
+    }
+    
+    .exercise-details {
+      flex: 1;
+    }
+    
+    .exercise-title {
+      font-weight: 600;
+      margin-bottom: var(--space-xxs);
+    }
+    
+    .exercise-specs {
+      font-size: 13px;
+      color: var(--gray-500);
+    }
+    
+    .fixed-bottom {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      max-width: 480px;
+      margin: 0 auto;
+      padding: var(--space-md) var(--space-lg);
+      background-color: white;
+      border-top: 1px solid var(--gray-200);
+      z-index: 5;
+    }
+    
+    .button.full {
+      width: 100%;
+      padding: var(--space-md);
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <!-- 主页/仪表板 -->
+    <div id="home-screen">
+      <div class="header">
+        <div>
+          <div class="header-title">你好，小明</div>
+          <div class="header-subtitle">今天感觉如何？准备开始训练吧！</div>
+        </div>
+        <div class="avatar">MX</div>
+      </div>
+      
+      <div class="content">
+        <!-- 统计卡片 -->
+        <div class="card stats-card">
+          <div class="stat-item">
+            <div class="stat-value">12</div>
+            <div class="stat-label">已完成锻炼</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">3</div>
+            <div class="stat-label">本周计划</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value">65%</div>
+            <div class="stat-label">达成率</div>
+          </div>
+        </div>
+        
+        <!-- 目标卡片 -->
+        <div class="card goal-card">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <h3 style="font-size: 16px; font-weight: 600;">每周锻炼目标</h3>
+              <div style="font-size: 14px; color: var(--gray-600);">每周4次锻炼</div>
+            </div>
+            <div class="badge beginner" style="background-color: rgba(46, 116, 255, 0.2); color: var(--blue-primary);">
+              进行中
+            </div>
+          </div>
+          
+          <div class="goal-progress">
+            <div class="progress-bar">
+              <div class="progress-fill"></div>
+            </div>
+          </div>
+          
+          <div class="goal-details">
+            <div>已完成 65%</div>
+            <div>还剩 2 次训练</div>
+          </div>
+        </div>
+        
+        <!-- 今日推荐 -->
+        <div class="section-title">
+          今日推荐
+          <a href="#" class="view-all">查看全部</a>
+        </div>
+        
+        <!-- 锻炼卡片 -->
+        <a href="#workout-detail" class="workout-card">
+          <div class="workout-icon strength">
+            <span class="material-icons-round">fitness_center</span>
+          </div>
+          <div class="workout-info">
+            <div class="workout-title">上肢力量训练</div>
+            <div class="workout-meta">
+              30分钟
+              <span class="meta-divider"></span>
+              高强度
+            </div>
+          </div>
+          <span class="badge beginner">初级</span>
+        </a>
+        
+        <a href="#" class="workout-card">
+          <div class="workout-icon cardio">
+            <span class="material-icons-round">directions_run</span>
+          </div>
+          <div class="workout-info">
+            <div class="workout-title">有氧燃脂训练</div>
+            <div class="workout-meta">
+              25分钟
+              <span class="meta-divider"></span>
+              中强度
+            </div>
+          </div>
+          <span class="badge intermediate">中级</span>
+        </a>
+        
+        <a href="#" class="workout-card">
+          <div class="workout-icon flexibility">
+            <span class="material-icons-round">self_improvement</span>
+          </div>
+          <div class="workout-info">
+            <div class="workout-title">全身拉伸放松</div>
+            <div class="workout-meta">
+              15分钟
+              <span class="meta-divider"></span>
+              低强度
+            </div>
+          </div>
+          <span class="badge beginner">初级</span>
+        </a>
+        
+        <!-- 分类标题 -->
+        <div class="section-title" style="margin-top: var(--space-xl);">
+          训练计划
+          <a href="#" class="view-all">查看全部</a>
+        </div>
+        
+        <!-- 更多锻炼卡片 -->
+        <a href="#" class="workout-card">
+          <div class="workout-icon strength" style="background-color: var(--green-light); color: var(--green);">
+            <span class="material-icons-round">timer</span>
+          </div>
+          <div class="workout-info">
+            <div class="workout-title">7天挑战 - 腹肌训练</div>
+            <div class="workout-meta">
+              7个训练日
+              <span class="meta-divider"></span>
+              全身锻炼
+            </div>
+          </div>
+          <span class="badge intermediate">中级</span>
+        </a>
+        
+        <a href="#" class="workout-card">
+          <div class="workout-icon cardio" style="background-color: var(--purple-light); color: var(--purple);">
+            <span class="material-icons-round">emoji_events</span>
+          </div>
+          <div class="workout-info">
+            <div class="workout-title">30天健身挑战</div>
+            <div class="workout-meta">
+              30个训练日
+              <span class="meta-divider"></span>
+              渐进式训练
+            </div>
+          </div>
+          <span class="badge advanced">高级</span>
+        </a>
+        
+        <!-- 浮动按钮 -->
+        <a href="#" class="fab">
+          <span class="material-icons-round">add</span>
+        </a>
+      </div>
+      
+      <!-- 底部导航 -->
+      <div class="nav-bar">
+        <a href="#" class="nav-item active">
+          <span class="material-icons-round">home</span>
+          <span>首页</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="material-icons-round">calendar_today</span>
+          <span>计划</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="material-icons-round">explore</span>
+          <span>探索</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="material-icons-round">insights</span>
+          <span>数据</span>
+        </a>
+        <a href="#" class="nav-item">
+          <span class="material-icons-round">person</span>
+          <span>我的</span>
+        </a>
+      </div>
+    </div>
+    
+    <!-- 锻炼详情页 -->
+    <div id="workout-detail" style="display: none;">
+      <div class="detail-header">
+        <a href="#home-screen" class="back-button" onclick="showScreen('home-screen')">
+          <span class="material-icons-round">arrow_back</span>
+        </a>
+        <div style="font-weight: 600;">锻炼详情</div>
+      </div>
+      
+      <div class="content">
+        <div class="workout-hero">
+          <div class="workout-image">
+            <img src="https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80" alt="上肢训练">
+          </div>
+          <div class="workout-label">
+            <span class="material-icons-round" style="font-size: 16px; margin-right: 4px; vertical-align: -3px;">fitness_center</span>
+            力量训练
+          </div>
+        </div>
+        
+        <h1 class="detail-title">上肢力量训练</h1>
+        <div class="detail-subtitle">全面锻炼肩部、手臂和背部肌肉</div>
+        
+        <div class="workout-info-grid">
+          <div class="info-card">
+            <div class="info-value">30分钟</div>
+            <div class="info-label">训练时长</div>
+          </div>
+          <div class="info-card">
+            <div class="info-value">8个</div>
+            <div class="info-label">训练动作</div>
+          </div>
+          <div class="info-card">
+            <div class="info-value">初级</div>
+            <div class="info-label">难度等级</div>
+          </div>
+        </div>
+        
+        <h2 class="section-subtitle">训练介绍</h2>
+        <p class="detail-description">
+          这个上肢力量训练主要针对肩部、手臂和背部肌肉群，帮助你塑造强健有力的上半身。整个训练过程大约需要30分钟，适合初学者和想要强化上肢肌肉的健身爱好者。
+        </p>
+        
+        <h2 class="section-subtitle">训练动作</h2>
+        <div class="exercise-list">
+          <div class="exercise-item">
+            <div class="exercise-number">1</div>
+            <div class="exercise-details">
+              <div class="exercise-title">俯卧撑</div>
+              <div class="exercise-specs">3组 × 10次</div>
+            </div>
+          </div>
+          
+          <div class="exercise-item">
+            <div class="exercise-number">2</div>
+            <div class="exercise-details">
+              <div class="exercise-title">哑铃肩上推举</div>
+              <div class="exercise-specs">3组 × 12次</div>
+            </div>
+          </div>
+          
+          <div class="exercise-item">
+            <div class="exercise-number">3</div>
+            <div class="exercise-details">
+              <div class="exercise-title">哑铃弯举</div>
+              <div class="exercise-specs">3组 × 15次</div>
+            </div>
+          </div>
+          
+          <div class="exercise-item">
+            <div class="exercise-number">4</div>
+            <div class="exercise-details">
+              <div class="exercise-title">三头肌下压</div>
+              <div class="exercise-specs">3组 × 12次</div>
+            </div>
+          </div>
+          
+          <div class="exercise-item">
+            <div class="exercise-number">5</div>
+            <div class="exercise-details">
+              <div class="exercise-title">划船</div>
+              <div class="exercise-specs">3组 × 12次</div>
+            </div>
+          </div>
+          
+          <div class="exercise-item">
+            <div class="exercise-number">6</div>
+            <div class="exercise-details">
+              <div class="exercise-title">侧平举</div>
+              <div class="exercise-specs">3组 × 12次</div>
+            </div>
+          </div>
+          
+          <div class="exercise-item">
+            <div class="exercise-number">7</div>
+            <div class="exercise-details">
+              <div class="exercise-title">上斜俯卧撑</div>
+              <div class="exercise-specs">3组 × 10次</div>
+            </div>
+          </div>
+          
+          <div class="exercise-item">
+            <div class="exercise-number">8</div>
+            <div class="exercise-details">
+              <div class="exercise-title">平板支撑</div>
+              <div class="exercise-specs">3组 × 30秒</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="fixed-bottom">
+        <button class="button primary full">
+          开始训练
+        </button>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    function showScreen(screenId) {
+      document.querySelectorAll('.app-container > div').forEach(screen => {
+        screen.style.display = 'none';
+      });
+      document.getElementById(screenId).style.display = 'block';
+    }
+    
+    // 初始展示主页
+    document.getElementById('home-screen').style.display = 'block';
+    
+    // 点击锻炼卡片跳转到详情页
+    document.querySelector('.workout-card').addEventListener('click', function(e) {
+      e.preventDefault();
+      showScreen('workout-detail');
+    });
+  </script>
+</body>
+</html>
